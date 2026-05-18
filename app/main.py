@@ -1,7 +1,28 @@
 import os
 import subprocess
 import sys
-import shlex
+
+def parse_input(command):
+    args = []
+    current_word = ""
+    in_single_quotes = False
+    for char in command:
+        if char == "'":
+            in_single_quotes = not in_single_quotes
+        elif char == " ":
+            if in_single_quotes: # equivalente a == True
+                current_word += char
+            else:
+                if current_word: # Solo agregamos si hay texto (evita guardar espacios dobles)
+                    args.append(current_word)
+                    current_word = ""
+        else:
+            current_word += char
+            
+    if current_word: # Si quedó una palabra al terminar el texto, la guardamos
+        args.append(current_word)
+        
+    return args
 
 
 def main():
@@ -11,7 +32,7 @@ def main():
         command = input()
         if not command.strip():
             continue
-        args = shlex.split(command)
+        args = parse_input(command)
         cmd = args[0]
         if cmd == "exit":
             break
