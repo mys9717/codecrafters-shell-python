@@ -4,7 +4,7 @@ import sys
 
 
 def main():
-    builtins = {"echo", "exit", "type", "pwd"}
+    builtins = {"echo", "exit", "type", "pwd", "cd"}
     while True:
         sys.stdout.write("$ ")
         command = input()
@@ -15,8 +15,14 @@ def main():
         elif command == "pwd":
             cwd = os.getcwd()
             print(cwd)
-        elif command.startswith("echo "):
+        elif command.startswith("echo "):   
             print(command[5:])
+        elif command.startswith("cd "):
+            direc = command[3:]
+            if os.path.isdir(direc):
+                os.chdir(direc)   
+            else:
+                print(f"cd: {direc}: No such file or directory")                         
         elif command.startswith("type "):
             arg = command[5:]  
             if arg in builtins:
