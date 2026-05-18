@@ -19,6 +19,7 @@ def main():
             print(command[5:])
         elif command.startswith("cd "):
             direc = command[3:]
+            direc = os.path.expanduser(direc)
             if os.path.isdir(direc):
                 os.chdir(direc)   
             else:
