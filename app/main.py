@@ -1,7 +1,8 @@
 import sys
 
-while True:
-    def main():
+
+def main():
+    while True:
         sys.stdout.write("$ ")
         pass
 
