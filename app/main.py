@@ -1,3 +1,4 @@
+import os
 import sys
 
 
@@ -15,7 +16,16 @@ def main():
             if arg in builtins:
                 print(f"{arg} is a shell builtin")   
             else:
-                print(f"{arg}: not found")                 
+                path = os.environ.get("PATH", "")
+                found = False
+                for dir in path.split(os.pathsep):
+                    full_path = os.path.join(dir, arg)
+                    if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+                        print(f"{arg} is {full_path}")
+                        found = True
+                        break
+                if not found:
+                    print(f"{arg}: not found")                 
         else:
             print(f"{command}: command not found")
 
