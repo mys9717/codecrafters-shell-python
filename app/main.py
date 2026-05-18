@@ -4,7 +4,7 @@ import sys
 
 
 def main():
-    builtins = {"echo", "exit", "type"}
+    builtins = {"echo", "exit", "type", "pwd"}
     while True:
         sys.stdout.write("$ ")
         command = input()
@@ -12,7 +12,10 @@ def main():
             continue
         if command == "exit":
             break
-        if command.startswith("echo "):
+        elif command == "pwd":
+            cwd = os.getcwd()
+            print(cwd)
+        elif command.startswith("echo "):
             print(command[5:])
         elif command.startswith("type "):
             arg = command[5:]  
