@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 
 
@@ -7,6 +8,8 @@ def main():
     while True:
         sys.stdout.write("$ ")
         command = input()
+        if not command.strip():
+            continue
         if command == "exit":
             break
         if command.startswith("echo "):
@@ -27,7 +30,19 @@ def main():
                 if not found:
                     print(f"{arg}: not found")                 
         else:
-            print(f"{command}: command not found")
+            args = command.split()
+            cmd = args[0]
+            path = os.environ.get("PATH", "")
+            found = False
+            for dir in path.split(os.pathsep):
+                full_path = os.path.join(dir, cmd)
+                if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+                    found = True
+                    break
+            if found:
+                subprocess.run(args)
+            else:
+                print(f"{command}: command not found")
 
 if __name__ == "__main__":
     main()
