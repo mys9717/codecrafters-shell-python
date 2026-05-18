@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import shlex
 
 
 def main():
@@ -10,22 +11,24 @@ def main():
         command = input()
         if not command.strip():
             continue
-        if command == "exit":
+        args = shlex.split(command)
+        cmd = args[0]
+        if cmd == "exit":
             break
-        elif command == "pwd":
+        elif cmd == "pwd":
             cwd = os.getcwd()
             print(cwd)
-        elif command.startswith("echo "):   
-            print(command[5:])
-        elif command.startswith("cd "):
-            direc = command[3:]
+        elif cmd == "echo":   
+            print(" ".join(args[1:]))
+        elif cmd == "cd":
+            direc = args[1]
             direc = os.path.expanduser(direc)
             if os.path.isdir(direc):
                 os.chdir(direc)   
             else:
                 print(f"cd: {direc}: No such file or directory")                         
-        elif command.startswith("type "):
-            arg = command[5:]  
+        elif cmd == "type":
+            arg = args[1]  
             if arg in builtins:
                 print(f"{arg} is a shell builtin")   
             else:
@@ -40,8 +43,6 @@ def main():
                 if not found:
                     print(f"{arg}: not found")                 
         else:
-            args = command.split()
-            cmd = args[0]
             path = os.environ.get("PATH", "")
             found = False
             for dir in path.split(os.pathsep):
